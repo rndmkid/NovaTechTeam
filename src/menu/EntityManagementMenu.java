@@ -202,6 +202,35 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	public void mainMenu() {
+		try {
+			final String command = getInputLine(
+					"Add, Update, Delete, or Retrieve an entity?").trim().toLowerCase();
+			switch (command) {
+			case "add": case "a":
+				add();
+				break;
+			case "update": case "u":
+				outStream.append("Not yet implemented");
+				outStream.append(System.lineSeparator());
+				break;
+			case "delete": case "d": case "remove":
+				outStream.append("Not yet implemented");
+				outStream.append(System.lineSeparator());
+				break;
+			case "retrieve": case "r": case "get":
+				retrieve();
+				break;
+			default:
+				outStream.append("Unsupported command");
+				outStream.append(System.lineSeparator());
+				break;
+			}
+		} catch (final IOException except) {
+			LOGGER.log(Level.SEVERE, "I/O error", except);
+		}
+	}
+
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
