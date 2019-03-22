@@ -3,6 +3,7 @@ package menu;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,6 +128,98 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	private void removeBook() throws IOException {
+		try { // TODO: allow searching by title, e.g.
+			final String input = getInputLine("ID of book to remove (-1 for all):")
+					.trim();
+			final int id = Integer.parseInt(input);
+			if (id < 0) {
+				for (final Book book : service.getAllBooks()) {
+					service.removeBook(book);
+				}
+			} else {
+				final Optional<Book> book = service.getBookByID(id);
+				if (book.isPresent()) {
+					service.removeBook(book.get());
+				} else {
+					outStream.append("No book with that ID");
+					outStream.append(System.lineSeparator());
+				}
+			}
+		} catch (final NumberFormatException except) {
+			outStream.append("ID must be an integer");
+			outStream.append(System.lineSeparator());
+			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		}
+	}
+
+	private void removeAuthor() throws IOException {
+		try { // TODO: allow searching by other fields
+			final String input = getInputLine("ID of author to remove (-1 for all):")
+					.trim();
+			final int id = Integer.parseInt(input);
+			if (id < 0) {
+				for (final Author author : service.getAllAuthors()) {
+					service.deleteAuthor(author);
+				}
+			} else {
+				final Optional<Author> author = service.getAuthorByID(id);
+				if (author.isPresent()) {
+					service.deleteAuthor(author.get());
+				} else {
+					outStream.append("No author with that ID");
+					outStream.append(System.lineSeparator());
+				}
+			}
+		} catch (final NumberFormatException except) {
+			outStream.append("ID must be an integer");
+			outStream.append(System.lineSeparator());
+			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		}
+	}
+
+	private void removePublisher() throws IOException {
+		try { // TODO: allow searching by other fields
+			final String input = getInputLine("ID of publisher to remove (-1 for all):")
+					.trim();
+			final int id = Integer.parseInt(input);
+			if (id < 0) {
+				for (final Publisher publisher : service.getAllPublishers()) {
+					service.removePublisher(publisher);
+				}
+			} else {
+				final Optional<Publisher> publisher = service.getPublisherByID(id);
+				if (publisher.isPresent()) {
+					service.removePublisher(publisher.get());
+				}
+			}
+		} catch (final NumberFormatException except) {
+			outStream.append("ID must be an integer");
+			outStream.append(System.lineSeparator());
+			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		}
+	}
+
+	public void remove() throws IOException {
+		final String kind = getInputLine("Kind of entity to remove:").trim()
+				.toLowerCase();
+		switch (kind) {
+		case "book": case "b":
+			removeBook();
+			break;
+		case "author": case "a":
+			removeAuthor();
+			break;
+		case "publisher": case "p":
+			removePublisher();
+			break;
+		default:
+			outStream.append("Entity must be a book, author, or publisher.");
+			outStream.append(System.lineSeparator());
+			break;
+		}
+	}
+
 	private Author createAuthor() throws IOException, NumberFormatException {
 		return service.createAuthor(getInputLine("Name of new author:"));
 	}
@@ -215,8 +308,7 @@ public final class EntityManagementMenu {
 				outStream.append(System.lineSeparator());
 				break;
 			case "delete": case "d": case "remove":
-				outStream.append("Not yet implemented");
-				outStream.append(System.lineSeparator());
+				remove();
 				break;
 			case "retrieve": case "r": case "get":
 				retrieve();
