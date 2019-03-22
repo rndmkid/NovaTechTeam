@@ -295,6 +295,82 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	private void updateBook() throws IOException {
+		try { // TODO: allow searching by title, e.g.
+			final String input = getInputLine("ID of book to update:").trim();
+			final int id = Integer.parseInt(input);
+			if (id < 0) {
+				outStream.append("ID must not be negative");
+				outStream.append(System.lineSeparator());
+			} else {
+				final Book book = service.getBookByID(id).get(); // FIXME: Check isPresent();
+				// TODO: ask user for changes to its data
+				service.updateBook(book);
+			}
+		} catch (final NumberFormatException except) {
+			outStream.append("ID must be an integer");
+			outStream.append(System.lineSeparator());
+			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		}
+	}
+
+	private void updateAuthor() throws IOException {
+		try { // TODO: allow searching by other fields
+			final String input = getInputLine("ID of author to update:").trim();
+			final int id = Integer.parseInt(input);
+			if (id < 0) {
+				outStream.append("ID must not be negative");
+				outStream.append(System.lineSeparator());
+			} else {
+				final Author author = service.getAuthorByID(id).get(); // FIXME: Check isPresent()
+				// TODO: ask user for changes to its data
+				service.updateAuthor(author);
+			}
+		} catch (final NumberFormatException except) {
+			outStream.append("ID must be an integer");
+			outStream.append(System.lineSeparator());
+			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		}
+	}
+
+	private void updatePublisher() throws IOException {
+		try { // TODO: allow searching by other fields
+			final String input = getInputLine("ID of publisher to update:").trim();
+			final int id = Integer.parseInt(input);
+			if (id < 0) {
+				outStream.append("ID must not be negative");
+				outStream.append(System.lineSeparator());
+			} else {
+				final Publisher publisher = service.getPublisherByID(id).get(); // FIXME: Check isPresent()
+				// TODO: ask user for changes to its data
+				service.updatePublisher(publisher);
+			}
+		} catch (final NumberFormatException except) {
+			outStream.append("ID must be an integer");
+			outStream.append(System.lineSeparator());
+			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		}
+	}
+
+	public void update() throws IOException {
+		final String kind = getInputLine("Kind of entity to add").trim().toLowerCase();
+		switch (kind) {
+		case "book": case "b":
+			updateBook();
+			break;
+		case "author": case "a":
+			updateAuthor();
+			break;
+		case "publisher": case "p":
+			updatePublisher();
+			break;
+		default:
+			outStream.append("Entity must be a book, author, or publisher.");
+			outStream.append(System.lineSeparator());
+			break;
+		}
+	}
+
 	public void mainMenu() {
 		try {
 			final String command = getInputLine(
@@ -304,8 +380,7 @@ public final class EntityManagementMenu {
 				add();
 				break;
 			case "update": case "u":
-				outStream.append("Not yet implemented");
-				outStream.append(System.lineSeparator());
+				update();
 				break;
 			case "delete": case "d": case "remove":
 				remove();
