@@ -49,4 +49,9 @@ public final class Author {
 	public int hashCode() {
 		return Long.hashCode(id);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Author %s (%d)", name, id);
+	}
 }

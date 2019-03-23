@@ -83,4 +83,10 @@ public final class Book {
 	public int hashCode() {
 		return Long.hashCode(id);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s (%d), by %s, published by %s", title, id,
+				author.getName(), publisher.getName());
+	}
 }

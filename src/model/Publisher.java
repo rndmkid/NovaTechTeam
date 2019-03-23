@@ -49,4 +49,9 @@ public final class Publisher {
 			return false;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Publisher %s (%d)", name, id);
+	}
 }
