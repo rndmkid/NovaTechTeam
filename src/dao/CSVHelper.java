@@ -17,6 +17,9 @@ public abstract class CSVHelper {
 		// Do not instantiate
 	}
 	public static String quoteCSV(final String string) {
+		if (string == null) {
+			return "";
+		}
 		final String retval = string.replace("\"", "\"\"");
 		if (retval.contains(",") || retval.contains("\n") || retval.contains("\r")
 				|| retval.contains("\"")) {

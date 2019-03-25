@@ -50,7 +50,7 @@ public final class EntityManagementMenu {
 				&& !Character.isWhitespace(prompt.charAt(prompt.length() - 1))) {
 			outStream.append(' ');
 		}
-		return inStream.nextLine();
+		return Optional.ofNullable(inStream.nextLine()).orElse("");
 	}
 
 	private void println(final String line) throws IOException {
