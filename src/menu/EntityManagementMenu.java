@@ -3,10 +3,13 @@ package menu;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import model.Author;
 import model.Book;
@@ -25,6 +28,8 @@ public final class EntityManagementMenu {
 	private final LibraryService service;
 	private final Scanner inStream;
 	private final Appendable outStream;
+	private static final Predicate<String> numericPattern = Pattern.compile("-?\\d+")
+			.asPredicate();
 
 	public EntityManagementMenu(final Reader in, final Appendable out,
 			final LibraryService service) {
@@ -48,9 +53,9 @@ public final class EntityManagementMenu {
 	}
 
 	private void retrieveBook() throws IOException {
-		try { // TODO: allow searching by title, e.g.
-			final String input = getInputLine("ID of book to retrieve (-1 for all):")
-					.trim();
+		final String input = getInputLine(
+				"ID of or search term for book to retrieve (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Book book : service.getAllBooks()) {
@@ -64,16 +69,23 @@ public final class EntityManagementMenu {
 					println("No record for that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Book> matchingBooks = service.getBooksMatching(input, true);
+			if (matchingBooks.isEmpty()) {
+				println("No books matched your search");
+			} else {
+				println("Books matching your search:");
+				for (final Book book : matchingBooks) {
+					println(book.toString());
+				}
+			}
 		}
 	}
 
 	private void retrieveAuthor() throws IOException {
-		try {
-			final String input = getInputLine("ID of author to retrieve (-1 for all):")
-					.trim();
+		final String input = getInputLine(
+				"ID of or search term for author to retrieve (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Author author : service.getAllAuthors()) {
@@ -87,16 +99,23 @@ public final class EntityManagementMenu {
 					println("No record for that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Author> matchingAuthors = service.getAuthorsMatching(input);
+			if (matchingAuthors.isEmpty()) {
+				println("No authors matched your search");
+			} else {
+				println("Authors matching your search:");
+				for (final Author author : matchingAuthors) {
+					println(author.toString());
+				}
+			}
 		}
 	}
 
 	private void retrievePublisher() throws IOException {
-		try {
-			final String input = getInputLine("ID of publisher to retrieve (-1 for all):")
-					.trim();
+		final String input = getInputLine("ID of publisher to retrieve (-1 for all):")
+				.trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Publisher publisher : service.getAllPublishers()) {
@@ -110,9 +129,16 @@ public final class EntityManagementMenu {
 					println("No record for that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Publisher> matchingPublishers = service.getPublishersMatching(input, true);
+			if (matchingPublishers.isEmpty()) {
+				println("No publishers matched your search");
+			} else {
+				println("Publishers matching your search:");
+				for (final Publisher publisher : matchingPublishers) {
+					println(publisher.toString());
+				}
+			}
 		}
 	}
 
