@@ -54,8 +54,14 @@ public final class EntityManagementMenu {
 					outStream.append(System.lineSeparator());
 				}
 			} else {
-				outStream.append(service.getBookByID(id).toString());
-				outStream.append(System.lineSeparator());
+				final Optional<Book> book = service.getBookByID(id);
+				if (book.isPresent()) {
+					outStream.append(book.toString());
+					outStream.append(System.lineSeparator());
+				} else {
+					outStream.append("No record for that ID");
+					outStream.append(System.lineSeparator());
+				}
 			}
 		} catch (final NumberFormatException except) {
 			outStream.append("ID must be an integer");
@@ -76,8 +82,14 @@ public final class EntityManagementMenu {
 					outStream.append(System.lineSeparator());
 				}
 			} else {
-				outStream.append(service.getAuthorByID(id).toString());
-				outStream.append(System.lineSeparator());
+				final Optional<Author> author = service.getAuthorByID(id);
+				if (author.isPresent()) {
+					outStream.append(author.get().toString());
+					outStream.append(System.lineSeparator());
+				} else {
+					outStream.append("No record for that ID");
+					outStream.append(System.lineSeparator());
+				}
 			}
 		} catch (final NumberFormatException except) {
 			outStream.append("ID must be an integer");
@@ -98,8 +110,14 @@ public final class EntityManagementMenu {
 					outStream.append(System.lineSeparator());
 				}
 			} else {
-				outStream.append(service.getPublisherByID(id).toString());
-				outStream.append(System.lineSeparator());
+				final Optional<Publisher> publisher = service.getPublisherByID(id);
+				if (publisher.isPresent()) {
+					outStream.append(publisher.toString());
+					outStream.append(System.lineSeparator());
+				} else {
+					outStream.append("No record for that ID");
+					outStream.append(System.lineSeparator());
+				}
 			}
 		} catch (final NumberFormatException except) {
 			outStream.append("ID must be an integer");
@@ -303,9 +321,14 @@ public final class EntityManagementMenu {
 				outStream.append("ID must not be negative");
 				outStream.append(System.lineSeparator());
 			} else {
-				final Book book = service.getBookByID(id).get(); // FIXME: Check isPresent();
-				// TODO: ask user for changes to its data
-				service.updateBook(book);
+				final Optional<Book> book = service.getBookByID(id);
+				if (book.isPresent()) {
+					// TODO: ask user for changes to its data
+					service.updateBook(book.get());
+				} else {
+					outStream.append("No record for that ID");
+					outStream.append(System.lineSeparator());
+				}
 			}
 		} catch (final NumberFormatException except) {
 			outStream.append("ID must be an integer");
@@ -322,9 +345,14 @@ public final class EntityManagementMenu {
 				outStream.append("ID must not be negative");
 				outStream.append(System.lineSeparator());
 			} else {
-				final Author author = service.getAuthorByID(id).get(); // FIXME: Check isPresent()
-				// TODO: ask user for changes to its data
-				service.updateAuthor(author);
+				final Optional<Author> author = service.getAuthorByID(id);
+				if (author.isPresent()) {
+					// TODO: ask user for changes to its data
+					service.updateAuthor(author.get());
+				} else {
+					outStream.append("No record for that ID");
+					outStream.append(System.lineSeparator());
+				}
 			}
 		} catch (final NumberFormatException except) {
 			outStream.append("ID must be an integer");
@@ -341,9 +369,14 @@ public final class EntityManagementMenu {
 				outStream.append("ID must not be negative");
 				outStream.append(System.lineSeparator());
 			} else {
-				final Publisher publisher = service.getPublisherByID(id).get(); // FIXME: Check isPresent()
-				// TODO: ask user for changes to its data
-				service.updatePublisher(publisher);
+				final Optional<Publisher> publisher = service.getPublisherByID(id);
+				if (publisher.isPresent()) {
+					// TODO: ask user for changes to its data
+					service.updatePublisher(publisher.get());
+				} else {
+					outStream.append("No record for that ID");
+					outStream.append(System.lineSeparator());
+				}
 			}
 		} catch (final NumberFormatException except) {
 			outStream.append("ID must be an integer");
