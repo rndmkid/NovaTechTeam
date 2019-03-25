@@ -196,9 +196,9 @@ public final class EntityManagementMenu {
 	}
 
 	private void removeBook() throws IOException {
-		try { // TODO: allow searching by title, e.g.
-			final String input = getInputLine("ID of book to remove (-1 for all):")
-					.trim();
+		final String input = getInputLine(
+				"ID of or search term for book to remove (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Book book : service.getAllBooks()) {
@@ -212,16 +212,25 @@ public final class EntityManagementMenu {
 					println("No book with that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Book> matchingBooks = service.getBooksMatching(input, true);
+			if (matchingBooks.isEmpty()) {
+				println("No books matched your search");
+			} else {
+				for (final Book book : matchingBooks) {
+					service.removeBook(book);
+				}
+				outStream.append("Removed ");
+				outStream.append(Integer.toString(matchingBooks.size()));
+				println(" books matching your search");
+			}
 		}
 	}
 
 	private void removeAuthor() throws IOException {
-		try { // TODO: allow searching by other fields
-			final String input = getInputLine("ID of author to remove (-1 for all):")
-					.trim();
+		final String input = getInputLine(
+				"ID of or search term for author to remove (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Author author : service.getAllAuthors()) {
@@ -235,16 +244,29 @@ public final class EntityManagementMenu {
 					println("No author with that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Author> matchingAuthors = service.getAuthorsMatching(input);
+			if (matchingAuthors.isEmpty()) {
+				println("No authors matched your search");
+			} else {
+				int bookCount = 0;
+				for (final Author author : matchingAuthors) {
+					bookCount += service.getBooksByAuthor(author).size();
+					service.deleteAuthor(author);
+				}
+				outStream.append("Removed ");
+				outStream.append(Integer.toString(matchingAuthors.size()));
+				outStream.append(" authors and their ");
+				outStream.append(Integer.toString(bookCount));
+				println(" books.");
+			}
 		}
 	}
 
 	private void removePublisher() throws IOException {
-		try { // TODO: allow searching by other fields
-			final String input = getInputLine("ID of publisher to remove (-1 for all):")
-					.trim();
+		final String input = getInputLine(
+				"ID of or search term for publisher to remove (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Publisher publisher : service.getAllPublishers()) {
@@ -256,9 +278,22 @@ public final class EntityManagementMenu {
 					service.removePublisher(publisher.get());
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Publisher> matchingPublishers = service.getPublishersMatching(input, true);
+			if (matchingPublishers.isEmpty()) {
+				println("No publishers matched your search");
+			} else {
+				int bookCount = 0;
+				for (final Publisher publisher : matchingPublishers) {
+					bookCount += service.getBooksPublishedBy(publisher).size();
+					service.removePublisher(publisher);
+				}
+				outStream.append("Removed ");
+				outStream.append(Integer.toString(matchingPublishers.size()));
+				outStream.append(" publishers and their ");
+				outStream.append(Integer.toString(bookCount));
+				println(" books.");
+			}
 		}
 	}
 
