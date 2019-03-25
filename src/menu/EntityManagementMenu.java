@@ -52,6 +52,7 @@ public final class EntityManagementMenu {
 		outStream.append(System.lineSeparator());
 	}
 
+	// TODO: Allow callers to instruct these methods to omit ID
 	private void printBook(final Book book) throws IOException {
 		outStream.append("Title:\t");
 		println(book.getTitle());
@@ -388,8 +389,9 @@ public final class EntityManagementMenu {
 	}
 
 	private void updateBook() throws IOException {
-		try { // TODO: allow searching by title, e.g.
-			final String input = getInputLine("ID of book to update:").trim();
+		final String input = getInputLine(
+				"ID of or search term for book to update (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				println("ID must not be negative");
@@ -402,15 +404,23 @@ public final class EntityManagementMenu {
 					println("No record for that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Book> matchingBooks = service.getBooksMatching(input, true);
+			if (matchingBooks.isEmpty()) {
+				println("No books matched your search");
+			} else {
+				for (final Book book : matchingBooks) {
+					// TODO: ask user for changes to data
+					service.updateBook(book);
+				}
+			}
 		}
 	}
 
 	private void updateAuthor() throws IOException {
-		try { // TODO: allow searching by other fields
-			final String input = getInputLine("ID of author to update:").trim();
+		final String input = getInputLine(
+				"ID of or search term for author to update (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				println("ID must not be negative");
@@ -423,15 +433,23 @@ public final class EntityManagementMenu {
 					println("No record for that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Author> matchingAuthors = service.getAuthorsMatching(input);
+			if (matchingAuthors.isEmpty()) {
+				println("No authors matched your search");
+			} else {
+				for (final Author author : matchingAuthors) {
+					// TODO: ask user for changes to data
+					service.updateAuthor(author);
+				}
+			}
 		}
 	}
 
 	private void updatePublisher() throws IOException {
-		try { // TODO: allow searching by other fields
-			final String input = getInputLine("ID of publisher to update:").trim();
+		final String input = getInputLine(
+				"ID of or search term for publisher to remove (-1 for all):").trim();
+		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				println("ID must not be negative");
@@ -444,9 +462,16 @@ public final class EntityManagementMenu {
 					println("No record for that ID");
 				}
 			}
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
+		} else {
+			final List<Publisher> matchingPublishers = service.getPublishersMatching(input, true);
+			if (matchingPublishers.isEmpty()) {
+				println("No publishers matched your search");
+			} else {
+				for (final Publisher publisher : matchingPublishers) {
+					// TODO: ask user for changes to data
+					service.updatePublisher(publisher);
+				}
+			}
 		}
 	}
 
