@@ -28,6 +28,8 @@ public interface DataAccessObject<T> {
 	/**
 	 * Remove an object from the database, ignoring relational constraints.
 	 *
+	 * TODO: check that fields other than ID match before deleting?
+	 *
 	 * @param entity the object to remove from the database.
 	 * @throws IOException if file not found or on other I/O error while reading or
 	 *                     writing
