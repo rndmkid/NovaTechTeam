@@ -393,18 +393,58 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	private void updateIndividualBook(final Book book) throws IOException {
+		println("Current contents of the record:");
+		printBook(book, false);
+		println("New values (blank to leave existing values):");
+		final String title = getInputLine("Title:\t").trim();
+		if (!title.isEmpty()) {
+			book.setTitle(title);
+		}
+		final String authorName = getInputLine("Author:\t)").trim();
+		if (!authorName.isEmpty()) {
+			final List<Author> authors = service.getAuthorsNamed(authorName);
+			if (authors.isEmpty()) {
+				book.setAuthor(service.createAuthor(authorName));
+			} else {
+				book.setAuthor(authors.get(0));
+			}
+		}
+		final String publisherName = getInputLine("Publisher:\t").trim();
+		if (!publisherName.isEmpty()) {
+			final List<Publisher> publishers = service.getPublishersNamed(publisherName);
+			if (publishers.isEmpty()) {
+				book.setPublisher(service.createPublisher(publisherName));
+			} else {
+				book.setPublisher(publishers.get(0));
+			}
+		}
+		final String isbn = getInputLine("ISBN:\t");
+		if (!isbn.isEmpty()) {
+			book.setIsbn(isbn);
+		}
+		service.updateBook(book);
+		println("");
+	}
+
 	private void updateBook() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for book to update (-1 for all):").trim();
 		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
-				println("ID must not be negative");
+				final List<Book> books = service.getAllBooks();
+				if (books.isEmpty()) {
+					println("No books in the database");
+				} else {
+					for (final Book book : books) {
+						updateIndividualBook(book);
+					}
+				}
 			} else {
 				final Optional<Book> book = service.getBookByID(id);
 				if (book.isPresent()) {
-					// TODO: ask user for changes to its data
-					service.updateBook(book.get());
+					updateIndividualBook(book.get());
 				} else {
 					println("No record for that ID");
 				}
@@ -415,11 +455,21 @@ public final class EntityManagementMenu {
 				println("No books matched your search");
 			} else {
 				for (final Book book : matchingBooks) {
-					// TODO: ask user for changes to data
-					service.updateBook(book);
+					updateIndividualBook(book);
 				}
 			}
 		}
+	}
+
+	private void updateIndividualAuthor(final Author author) throws IOException {
+		outStream.append("Author's current name:\t");
+		println(author.getName());
+		final String name = getInputLine("New name (blank to leave unchanged):\t").trim();
+		if (!name.isEmpty()) {
+			author.setName(name);
+		}
+		service.updateAuthor(author);
+		println("");
 	}
 
 	private void updateAuthor() throws IOException {
@@ -428,12 +478,18 @@ public final class EntityManagementMenu {
 		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
-				println("ID must not be negative");
+				final List<Author> authors = service.getAllAuthors();
+				if (authors.isEmpty()) {
+					println("No authors in the database");
+				} else {
+					for (final Author author : authors) {
+						updateIndividualAuthor(author);
+					}
+				}
 			} else {
 				final Optional<Author> author = service.getAuthorByID(id);
 				if (author.isPresent()) {
-					// TODO: ask user for changes to its data
-					service.updateAuthor(author.get());
+					updateIndividualAuthor(author.get());
 				} else {
 					println("No record for that ID");
 				}
@@ -444,11 +500,30 @@ public final class EntityManagementMenu {
 				println("No authors matched your search");
 			} else {
 				for (final Author author : matchingAuthors) {
-					// TODO: ask user for changes to data
-					service.updateAuthor(author);
+					updateIndividualAuthor(author);
 				}
 			}
 		}
+	}
+
+	private void updateIndividualPublisher(final Publisher publisher) throws IOException {
+		println("Current contents of the record:");
+		printPublisher(publisher, false);
+		println("New values (blank to leave unchanged):");
+		final String name = getInputLine("Name:\t").trim();
+		if (!name.isEmpty()) {
+			publisher.setName(name);
+		}
+		final String phone = getInputLine("Phone:\t");
+		if (!phone.isEmpty()) {
+			publisher.setPhone(phone);
+		}
+		final String address = getInputLine("Address:\t").trim();
+		if (!address.isEmpty()) {
+			publisher.setAddress(address);
+		}
+		service.updatePublisher(publisher);
+		println("");
 	}
 
 	private void updatePublisher() throws IOException {
@@ -457,12 +532,18 @@ public final class EntityManagementMenu {
 		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
-				println("ID must not be negative");
+				final List<Publisher> publishers = service.getAllPublishers();
+				if (publishers.isEmpty()) {
+					println("No publishers in the database");
+				} else {
+					for (final Publisher publisher : publishers) {
+						updateIndividualPublisher(publisher);
+					}
+				}
 			} else {
 				final Optional<Publisher> publisher = service.getPublisherByID(id);
 				if (publisher.isPresent()) {
-					// TODO: ask user for changes to its data
-					service.updatePublisher(publisher.get());
+					updateIndividualPublisher(publisher.get());
 				} else {
 					println("No record for that ID");
 				}
@@ -473,8 +554,7 @@ public final class EntityManagementMenu {
 				println("No publishers matched your search");
 			} else {
 				for (final Publisher publisher : matchingPublishers) {
-					// TODO: ask user for changes to data
-					service.updatePublisher(publisher);
+					updateIndividualPublisher(publisher);
 				}
 			}
 		}
