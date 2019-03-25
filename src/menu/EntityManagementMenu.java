@@ -2,6 +2,7 @@ package menu;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import dao.AuthorDataAccessObject;
+import dao.BookDataAccessObject;
+import dao.DataAccessObject;
+import dao.PublisherDataAccessObject;
 import model.Author;
 import model.Book;
 import model.Publisher;
 import service.LibraryService;
+import service.LibraryServiceImpl;
 
 /**
  * A command-line application to let the user manage the database.
@@ -578,29 +584,56 @@ public final class EntityManagementMenu {
 		}
 	}
 
-	public void mainMenu() {
+	/**
+	 * Ask for and handle a command; return false on I/O error or if the user says
+	 * "Quit."
+	 */
+	public boolean mainMenu() {
 		try {
 			final String command = getInputLine(
-					"Add, Update, Delete, or Retrieve an entity?").trim().toLowerCase();
+					"Add, Update, Delete, or Retrieve an entity, or Quit?").trim()
+							.toLowerCase();
 			switch (command) {
 			case "add": case "a":
 				add();
-				break;
+				return true;
 			case "update": case "u":
 				update();
-				break;
+				return true;
 			case "delete": case "d": case "remove":
 				remove();
-				break;
+				return true;
 			case "retrieve": case "r": case "get":
 				retrieve();
-				break;
+				return true;
+			case "quit": case "q": case "exit":
+				return false;
 			default:
 				println("Unsupported command");
-				break;
+				return true;
 			}
 		} catch (final IOException except) {
 			LOGGER.log(Level.SEVERE, "I/O error", except);
+			return false;
+		}
+	}
+
+	public static void main(final String... args) {
+		String basePath;
+		if (args.length == 0) {
+			basePath = ".";
+		} else {
+			basePath = args[0];
+		}
+		final DataAccessObject<Author> authorDAO = new AuthorDataAccessObject(basePath + "/authors.csv");
+		final DataAccessObject<Publisher> publisherDAO = new PublisherDataAccessObject(basePath + "/publishers.csv");
+		final DataAccessObject<Book> bookDAO = new BookDataAccessObject(basePath + "/books.csv", authorDAO, publisherDAO);
+		try (InputStreamReader in = new InputStreamReader(System.in)) {
+			final EntityManagementMenu menu = new EntityManagementMenu(in, System.out,
+					new LibraryServiceImpl(bookDAO, authorDAO, publisherDAO));
+			while (menu.mainMenu()) {}
+		} catch (final IOException except) {
+			System.err.println("I/O error dealing with standard input stream");
 		}
 	}
 
