@@ -52,8 +52,7 @@ public final class EntityManagementMenu {
 		outStream.append(System.lineSeparator());
 	}
 
-	// TODO: Allow callers to instruct these methods to omit ID
-	private void printBook(final Book book) throws IOException {
+	private void printBook(final Book book, final boolean includeID) throws IOException {
 		outStream.append("Title:\t");
 		println(book.getTitle());
 		outStream.append("Author:\t)");
@@ -62,8 +61,10 @@ public final class EntityManagementMenu {
 		println(book.getPublisher().getName());
 		outStream.append("ISBN:\t");
 		println(book.getIsbn());
-		outStream.append("Record ID:\t");
-		println(Long.toString(book.getId()));
+		if (includeID) {
+			outStream.append("Record ID:\t");
+			println(Long.toString(book.getId()));
+		}
 		println("");
 	}
 
@@ -74,12 +75,12 @@ public final class EntityManagementMenu {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Book book : service.getAllBooks()) {
-					printBook(book);
+					printBook(book, true);
 				}
 			} else {
 				final Optional<Book> book = service.getBookByID(id);
 				if (book.isPresent()) {
-					printBook(book.get());
+					printBook(book.get(), true);
 				} else {
 					println("No record for that ID");
 				}
@@ -91,17 +92,19 @@ public final class EntityManagementMenu {
 			} else {
 				println("Books matching your search:");
 				for (final Book book : matchingBooks) {
-					printBook(book);
+					printBook(book, true);
 				}
 			}
 		}
 	}
 
-	private void printAuthor(final Author author) throws IOException {
+	private void printAuthor(final Author author, final boolean printID) throws IOException {
 		outStream.append("Name:\t");
 		println(author.getName());
-		outStream.append("Record ID:\t");
-		println(Long.toBinaryString(author.getId()));
+		if (printID) {
+			outStream.append("Record ID:\t");
+			println(Long.toBinaryString(author.getId()));
+		}
 		println("");
 	}
 
@@ -112,12 +115,12 @@ public final class EntityManagementMenu {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Author author : service.getAllAuthors()) {
-					printAuthor(author);
+					printAuthor(author, true);
 				}
 			} else {
 				final Optional<Author> author = service.getAuthorByID(id);
 				if (author.isPresent()) {
-					printAuthor(author.get());
+					printAuthor(author.get(), true);
 				} else {
 					println("No record for that ID");
 				}
@@ -129,21 +132,23 @@ public final class EntityManagementMenu {
 			} else {
 				println("Authors matching your search:");
 				for (final Author author : matchingAuthors) {
-					printAuthor(author);
+					printAuthor(author, true);
 				}
 			}
 		}
 	}
 
-	private void printPublisher(final Publisher publisher) throws IOException {
+	private void printPublisher(final Publisher publisher, final boolean printID) throws IOException {
 		outStream.append("Name:\t");
 		println(publisher.getName());
 		outStream.append("Phone:\t");
 		println(publisher.getPhone());
 		outStream.append("Address:\t");
 		println(publisher.getAddress());
-		outStream.append("Record ID:\t");
-		println(Long.toString(publisher.getId()));
+		if (printID) {
+			outStream.append("Record ID:\t");
+			println(Long.toString(publisher.getId()));
+		}
 		println("");
 	}
 
@@ -154,12 +159,12 @@ public final class EntityManagementMenu {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Publisher publisher : service.getAllPublishers()) {
-					printPublisher(publisher);
+					printPublisher(publisher, true);
 				}
 			} else {
 				final Optional<Publisher> publisher = service.getPublisherByID(id);
 				if (publisher.isPresent()) {
-					printPublisher(publisher.get());
+					printPublisher(publisher.get(), true);
 				} else {
 					println("No record for that ID");
 				}
@@ -171,7 +176,7 @@ public final class EntityManagementMenu {
 			} else {
 				println("Publishers matching your search:");
 				for (final Publisher publisher : matchingPublishers) {
-					printPublisher(publisher);
+					printPublisher(publisher, true);
 				}
 			}
 		}
