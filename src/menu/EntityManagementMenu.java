@@ -147,8 +147,8 @@ public final class EntityManagementMenu {
 	}
 
 	private void retrievePublisher() throws IOException {
-		final String input = getInputLine("ID of publisher to retrieve (-1 for all):")
-				.trim();
+		final String input = getInputLine(
+				"ID of or search term for publisher to retrieve (-1 for all):").trim();
 		if (numericPattern.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
