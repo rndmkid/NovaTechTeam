@@ -42,6 +42,11 @@ public final class EntityManagementMenu {
 		return inStream.nextLine();
 	}
 
+	private void println(final String line) throws IOException {
+		outStream.append(line);
+		outStream.append(System.lineSeparator());
+	}
+
 	private void retrieveBook() throws IOException {
 		try { // TODO: allow searching by title, e.g.
 			final String input = getInputLine("ID of book to retrieve (-1 for all):")
@@ -49,23 +54,18 @@ public final class EntityManagementMenu {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Book book : service.getAllBooks()) {
-					outStream.append(book.toString()); // TODO: Don't just rely on
-														// toString()
-					outStream.append(System.lineSeparator());
+					println(book.toString()); // TODO: Don't just rely on toString()
 				}
 			} else {
 				final Optional<Book> book = service.getBookByID(id);
 				if (book.isPresent()) {
-					outStream.append(book.toString());
-					outStream.append(System.lineSeparator());
+					println(book.toString());
 				} else {
-					outStream.append("No record for that ID");
-					outStream.append(System.lineSeparator());
+					println("No record for that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -77,23 +77,18 @@ public final class EntityManagementMenu {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Author author : service.getAllAuthors()) {
-					outStream.append(author.toString()); // TODO: Don't just rely on
-															// toString()
-					outStream.append(System.lineSeparator());
+					println(author.toString()); // TODO: Don't just rely on toString()
 				}
 			} else {
 				final Optional<Author> author = service.getAuthorByID(id);
 				if (author.isPresent()) {
-					outStream.append(author.get().toString());
-					outStream.append(System.lineSeparator());
+					println(author.get().toString());
 				} else {
-					outStream.append("No record for that ID");
-					outStream.append(System.lineSeparator());
+					println("No record for that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -105,23 +100,18 @@ public final class EntityManagementMenu {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Publisher publisher : service.getAllPublishers()) {
-					outStream.append(publisher.toString()); // TODO: Don't just rely on
-															// toString()
-					outStream.append(System.lineSeparator());
+					println(publisher.toString()); // TODO: Don't just rely on toString()
 				}
 			} else {
 				final Optional<Publisher> publisher = service.getPublisherByID(id);
 				if (publisher.isPresent()) {
-					outStream.append(publisher.toString());
-					outStream.append(System.lineSeparator());
+					println(publisher.toString());
 				} else {
-					outStream.append("No record for that ID");
-					outStream.append(System.lineSeparator());
+					println("No record for that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -140,8 +130,7 @@ public final class EntityManagementMenu {
 			retrievePublisher();
 			break;
 		default:
-			outStream.append("Entity must be a book, author, or publisher.");
-			outStream.append(System.lineSeparator());
+			println("Entity must be a book, author, or publisher.");
 			break;
 		}
 	}
@@ -160,13 +149,11 @@ public final class EntityManagementMenu {
 				if (book.isPresent()) {
 					service.removeBook(book.get());
 				} else {
-					outStream.append("No book with that ID");
-					outStream.append(System.lineSeparator());
+					println("No book with that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -185,13 +172,11 @@ public final class EntityManagementMenu {
 				if (author.isPresent()) {
 					service.deleteAuthor(author.get());
 				} else {
-					outStream.append("No author with that ID");
-					outStream.append(System.lineSeparator());
+					println("No author with that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -212,8 +197,7 @@ public final class EntityManagementMenu {
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -232,8 +216,7 @@ public final class EntityManagementMenu {
 			removePublisher();
 			break;
 		default:
-			outStream.append("Entity must be a book, author, or publisher.");
-			outStream.append(System.lineSeparator());
+			println("Entity must be a book, author, or publisher.");
 			break;
 		}
 	}
@@ -268,8 +251,7 @@ public final class EntityManagementMenu {
 			service.createBook(getInputLine("Title of new book:"),
 					getInputLine("ISBN of new book:").trim(), author, publisher);
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -278,8 +260,7 @@ public final class EntityManagementMenu {
 		try {
 			createAuthor();
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -288,8 +269,7 @@ public final class EntityManagementMenu {
 		try {
 			createPublisher();
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -307,8 +287,7 @@ public final class EntityManagementMenu {
 			addPublisher();
 			break;
 		default:
-			outStream.append("Entity must be a book, author, or publisher.");
-			outStream.append(System.lineSeparator());
+			println("Entity must be a book, author, or publisher.");
 			break;
 		}
 	}
@@ -318,21 +297,18 @@ public final class EntityManagementMenu {
 			final String input = getInputLine("ID of book to update:").trim();
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
-				outStream.append("ID must not be negative");
-				outStream.append(System.lineSeparator());
+				println("ID must not be negative");
 			} else {
 				final Optional<Book> book = service.getBookByID(id);
 				if (book.isPresent()) {
 					// TODO: ask user for changes to its data
 					service.updateBook(book.get());
 				} else {
-					outStream.append("No record for that ID");
-					outStream.append(System.lineSeparator());
+					println("No record for that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -342,21 +318,18 @@ public final class EntityManagementMenu {
 			final String input = getInputLine("ID of author to update:").trim();
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
-				outStream.append("ID must not be negative");
-				outStream.append(System.lineSeparator());
+				println("ID must not be negative");
 			} else {
 				final Optional<Author> author = service.getAuthorByID(id);
 				if (author.isPresent()) {
 					// TODO: ask user for changes to its data
 					service.updateAuthor(author.get());
 				} else {
-					outStream.append("No record for that ID");
-					outStream.append(System.lineSeparator());
+					println("No record for that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -366,21 +339,18 @@ public final class EntityManagementMenu {
 			final String input = getInputLine("ID of publisher to update:").trim();
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
-				outStream.append("ID must not be negative");
-				outStream.append(System.lineSeparator());
+				println("ID must not be negative");
 			} else {
 				final Optional<Publisher> publisher = service.getPublisherByID(id);
 				if (publisher.isPresent()) {
 					// TODO: ask user for changes to its data
 					service.updatePublisher(publisher.get());
 				} else {
-					outStream.append("No record for that ID");
-					outStream.append(System.lineSeparator());
+					println("No record for that ID");
 				}
 			}
 		} catch (final NumberFormatException except) {
-			outStream.append("ID must be an integer");
-			outStream.append(System.lineSeparator());
+			println("ID must be an integer");
 			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
 		}
 	}
@@ -398,8 +368,7 @@ public final class EntityManagementMenu {
 			updatePublisher();
 			break;
 		default:
-			outStream.append("Entity must be a book, author, or publisher.");
-			outStream.append(System.lineSeparator());
+			println("Entity must be a book, author, or publisher.");
 			break;
 		}
 	}
@@ -422,8 +391,7 @@ public final class EntityManagementMenu {
 				retrieve();
 				break;
 			default:
-				outStream.append("Unsupported command");
-				outStream.append(System.lineSeparator());
+				println("Unsupported command");
 				break;
 			}
 		} catch (final IOException except) {
