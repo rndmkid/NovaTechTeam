@@ -32,7 +32,9 @@ public abstract class CSVHelper {
 		while (true) {
 			final int ch = in.read();
 			if (ch == -1) { // EOF
-				retval.add(buffer.toString());
+				if (!retval.isEmpty() || buffer.length() != 0) {
+					retval.add(buffer.toString());
+				}
 				return retval;
 			} else if (ch == '"') {
 				final int next = in.read();
