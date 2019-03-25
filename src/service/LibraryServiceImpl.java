@@ -1,5 +1,6 @@
 package service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -34,10 +35,14 @@ public final class LibraryServiceImpl implements LibraryService {
 	// TODO: Add maxID field to DAO interface?
 	@Override
 	public Author createAuthor(final String authorName) throws IOException {
-		final Author author = new Author(
-				authorDAO.findAll().stream().mapToLong(Author::getId).max().orElse(0L)
-						+ 1,
-				authorName);
+		long maxID;
+		try {
+			maxID = authorDAO.findAll().stream().mapToLong(Author::getId).max()
+					.orElse(0L);
+		} catch (final FileNotFoundException except) {
+			maxID = 0L;
+		}
+		final Author author = new Author(maxID + 1, authorName);
 		authorDAO.save(author);
 		return author;
 	}
@@ -46,8 +51,14 @@ public final class LibraryServiceImpl implements LibraryService {
 	public Publisher createPublisher(final String publisherName,
 			final String publisherAddress, final String publisherPhone)
 			throws IOException {
-		final Publisher publisher = new Publisher(publisherDAO.findAll().stream()
-				.mapToLong(Publisher::getId).max().orElse(0L) + 1, publisherName,
+		long maxID;
+		try {
+			maxID = publisherDAO.findAll().stream().mapToLong(Publisher::getId).max()
+					.orElse(0L);
+		} catch (final FileNotFoundException except) {
+			maxID = 0L;
+		}
+		final Publisher publisher = new Publisher(maxID + 1, publisherName,
 				publisherAddress, publisherPhone);
 		publisherDAO.save(publisher);
 		return publisher;
@@ -62,9 +73,13 @@ public final class LibraryServiceImpl implements LibraryService {
 		if (!publisherDAO.find(publisher.getId()).isPresent()) {
 			publisherDAO.save(publisher);
 		}
-		final Book book = new Book(
-				bookDAO.findAll().stream().mapToLong(Book::getId).max().orElse(0L) + 1,
-				author, publisher, title, isbn);
+		long maxID;
+		try {
+			maxID = bookDAO.findAll().stream().mapToLong(Book::getId).max().orElse(0L);
+		} catch (final FileNotFoundException except) {
+			maxID = 0L;
+		}
+		final Book book = new Book(maxID + 1, author, publisher, title, isbn);
 		bookDAO.save(book);
 		return book;
 	}
