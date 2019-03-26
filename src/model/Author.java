@@ -9,15 +9,32 @@ import java.util.Objects;
  * @author Jonathan Lovelace
  */
 public final class Author {
+	/**
+	 * The author's ID number (key in the database table).
+	 */
 	private final long id;
+	/**
+	 * The author's name.
+	 */
 	private String name;
 
+	/**
+	 * Construct an author given its full state.
+	 * @param id the author's ID (database primary key)
+	 * @param name the author's nname
+	 */
 	public Author(final long id, final String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public Author(final long id) { // TODO: Do we really want to allow authors with no names?
+	/**
+	 * Construct an author given only its ID.
+	 *
+	 * <p>TODO: Do we really want to allow authors with no names?
+	 * @param id the author's ID.
+	 */
+	public Author(final long id) {
 		this(id, "");
 	}
 

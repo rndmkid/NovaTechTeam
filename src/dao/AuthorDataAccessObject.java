@@ -17,11 +17,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import model.Author;
-
+/**
+ * A class to read Authors from and write them to the database (CSV file)
+ * @author Jonathan Lovelace
+ *
+ */
 public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 
+	/**
+	 * The file the table is stored in.
+	 */
 	private final Path filename;
 
+	/**
+	 * Construct the DAO.
+	 * @param filename the file the table is or will be stored in.
+	 */
 	public AuthorDataAccessObject(final String filename) {
 		this.filename = Paths.get(filename);
 	}

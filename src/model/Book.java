@@ -9,18 +9,47 @@ import java.util.Objects;
  * @author Jonathan Lovelace
  */
 public final class Book {
+	/**
+	 * The book's ID number (database key).
+	 */
 	private final long id;
+	/**
+	 * The book's title.
+	 */
 	private String title;
+	/**
+	 * The book's ISBN. (Validity is not even minimally checked at this point.)
+	 */
 	private String isbn;
+	/**
+	 * The book's author. Must not be null.
+	 */
 	private Author author;
+	/**
+	 * The book's publisher. Must not be null.
+	 */
 	private Publisher publisher;
 
-	public Book(final long id, final Author author, final Publisher publisher) { // TODO: Do we really want
-		// to allow books with no
-		// titles?
+	/**
+	 * Constructor taking only the parameters for which we can't provide defaults.
+	 *
+	 * <p>TODO: Do we really want to allow books with no titles?
+	 * @param id the book's ID number
+	 * @param author the author of the book
+	 * @param publisher the publisher of the book
+	 */
+	public Book(final long id, final Author author, final Publisher publisher) {
 		this(id, author, publisher, "", "");
 	}
 
+	/**
+	 * Constructor initializing all fields.
+	 * @param id the book's ID number
+	 * @param author the author of the book
+	 * @param publisher the publisher of the book
+	 * @param title the title of the book
+	 * @param isbn the book's ISBN
+	 */
 	public Book(final long id, final Author author, final Publisher publisher, final String title, final String isbn) {
 		this.id = id;
 		this.author = author;
