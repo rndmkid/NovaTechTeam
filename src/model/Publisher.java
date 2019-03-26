@@ -26,6 +26,8 @@ public final class Publisher {
 			final String phone) {
 		this.id = id;
 		this.name = name;
+		this.address = address;
+		this.phone = phone;
 	}
 
 	public String getName() {
