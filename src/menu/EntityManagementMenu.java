@@ -339,21 +339,45 @@ public final class EntityManagementMenu {
 
 	private void addBook() throws IOException {
 		try {
-			final long authorID = Long.parseLong(
-					getInputLine("ID of author of book (-1 to add new):").trim());
-			final Author author;
-			if (authorID < 0) {
-				author = createAuthor();
+			final String authorString = getInputLine("ID or name of author of book")
+					.trim();
+			Author author;
+			if (numericPattern.test(authorString)) {
+				final Optional<Author> temp = service
+						.getAuthorByID(Long.parseLong(authorString));
+				if (temp.isPresent()) {
+					author = temp.get();
+				} else {
+					println("No author with that ID");
+					return;
+				}
 			} else {
-				author = service.getAuthorByID(authorID).get();
+				final List<Author> matching = service.getAuthorsNamed(authorString);
+				if (matching.isEmpty()) {
+					author = service.createAuthor(authorString);
+				} else {
+					author = matching.get(0);
+				}
 			}
-			final long publisherID = Long.parseLong(
-					getInputLine("ID of publisher of book (-1 to add new):").trim());
-			final Publisher publisher;
-			if (publisherID < 0) {
-				publisher = createPublisher();
+			final String publisherString = getInputLine(
+					"ID or name of publisher of book (-1 to add new):").trim();
+			Publisher publisher;
+			if (numericPattern.test(publisherString)) {
+				final Optional<Publisher> temp = service
+						.getPublisherByID(Long.parseLong(publisherString));
+				if (temp.isPresent()) {
+					publisher = temp.get();
+				} else {
+					println("No publisher with that ID");
+					return;
+				}
 			} else {
-				publisher = service.getPublisherByID(publisherID).get();
+				final List<Publisher> matching = service.getPublishersNamed(publisherString);
+				if (matching.isEmpty()) {
+					publisher = service.createPublisher(publisherString);
+				} else {
+					publisher = matching.get(0);
+				}
 			}
 			service.createBook(getInputLine("Title of new book:"),
 					getInputLine("ISBN of new book:").trim(), author, publisher);
