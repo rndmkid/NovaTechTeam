@@ -328,11 +328,11 @@ public final class EntityManagementMenu {
 		}
 	}
 
-	private Author createAuthor() throws IOException, NumberFormatException {
+	private Author createAuthor() throws IOException {
 		return service.createAuthor(getInputLine("Name of new author:"));
 	}
 
-	private Publisher createPublisher() throws IOException, NumberFormatException {
+	private Publisher createPublisher() throws IOException {
 		return service.createPublisher(getInputLine("Name of new publisher:"),
 				getInputLine("Publisher address:"), getInputLine("Publisher phone:"));
 	}
@@ -388,21 +388,11 @@ public final class EntityManagementMenu {
 	}
 
 	private void addAuthor() throws IOException {
-		try {
-			createAuthor();
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
-		}
+		createAuthor();
 	}
 
 	private void addPublisher() throws IOException {
-		try {
-			createPublisher();
-		} catch (final NumberFormatException except) {
-			println("ID must be an integer");
-			LOGGER.log(Level.FINER, "Failed to parse integer from input", except);
-		}
+		createPublisher();
 	}
 
 	public void add() throws IOException {
