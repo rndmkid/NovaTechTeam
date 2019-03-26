@@ -573,7 +573,7 @@ public final class EntityManagementMenu {
 	}
 
 	public void update() throws IOException {
-		final String kind = getInputLine("Kind of entity to add:").trim().toLowerCase();
+		final String kind = getInputLine("Kind of entity to update:").trim().toLowerCase();
 		switch (kind) {
 		case "book": case "b":
 			updateBook();
