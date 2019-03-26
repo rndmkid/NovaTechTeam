@@ -1,10 +1,12 @@
 package dao;
 
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.PushbackReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,17 +18,18 @@ import model.Author;
 
 public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 
-	private final String filename;
+	private final Path filename;
 
 	public AuthorDataAccessObject(final String filename) {
-		this.filename = filename;
+		this.filename = Paths.get(filename);
 	}
 
 	// TODO: keep a cache of IDs that have been used, to make save() idempotent on
 	// repeated calls
 	@Override
 	public void save(final Author entity) throws IOException {
-		try (PrintWriter out = new PrintWriter(new FileWriter(filename, true))) {
+		try (PrintWriter out = new PrintWriter(
+				Files.newBufferedWriter(filename, StandardOpenOption.APPEND))) {
 			out.println(Stream.of(Long.toString(entity.getId()), entity.getName())
 					.map(CSVHelper::quoteCSV).collect(Collectors.joining(",")));
 		}
@@ -35,7 +38,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 	@Override
 	public void delete(final Author entity) throws IOException {
 		final List<List<String>> table = new ArrayList<>();
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
@@ -45,7 +48,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 				}
 			}
 		}
-		try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
+		try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(filename))) {
 			for (final List<String> record : table) {
 				out.println(record.stream().map(CSVHelper::quoteCSV)
 						.collect(Collectors.joining(",")));
@@ -56,7 +59,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 	@Override
 	public void update(final Author entity) throws IOException {
 		final List<List<String>> table = new ArrayList<>();
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
@@ -69,7 +72,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 				}
 			}
 		}
-		try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
+		try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(filename))) {
 			for (final List<String> record : table) {
 				out.println(record.stream().map(CSVHelper::quoteCSV)
 						.collect(Collectors.joining(",")));
@@ -79,7 +82,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 
 	@Override
 	public Optional<Author> find(final long id) throws IOException {
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
@@ -95,7 +98,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 	@Override
 	public List<Author> findAll() throws IOException {
 		final List<Author> retval = new ArrayList<>();
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {

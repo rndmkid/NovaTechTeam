@@ -1,10 +1,12 @@
 package dao;
 
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.PushbackReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,7 @@ import model.Publisher;
 
 public final class BookDataAccessObject implements DataAccessObject<Book> {
 
-	private final String filename;
+	private final Path filename;
 
 	private final DataAccessObject<Author> authorDAO;
 
@@ -27,7 +29,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 	public BookDataAccessObject(final String filename,
 			final DataAccessObject<Author> authorDAO,
 			final DataAccessObject<Publisher> publisherDAO) {
-		this.filename = filename;
+		this.filename = Paths.get(filename);
 		this.authorDAO = authorDAO;
 		this.publisherDAO = publisherDAO;
 	}
@@ -36,7 +38,8 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 	// repeated calls
 	@Override
 	public void save(final Book entity) throws IOException {
-		try (PrintWriter out = new PrintWriter(new FileWriter(filename, true))) {
+		try (PrintWriter out = new PrintWriter(
+				Files.newBufferedWriter(filename, StandardOpenOption.APPEND))) {
 			out.println(Stream
 					.of(entity.getId(), entity.getAuthor().getId(),
 							entity.getPublisher().getId(), entity.getTitle(),
@@ -49,7 +52,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 	@Override
 	public void delete(final Book entity) throws IOException {
 		final List<List<String>> table = new ArrayList<>();
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
@@ -59,7 +62,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 				}
 			}
 		}
-		try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
+		try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(filename))) {
 			for (final List<String> record : table) {
 				out.println(record.stream().map(CSVHelper::quoteCSV)
 						.collect(Collectors.joining(",")));
@@ -70,7 +73,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 	@Override
 	public void update(final Book entity) throws IOException {
 		final List<List<String>> table = new ArrayList<>();
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
@@ -85,7 +88,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 				}
 			}
 		}
-		try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
+		try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(filename))) {
 			for (final List<String> record : table) {
 				out.println(record.stream().map(CSVHelper::quoteCSV)
 						.collect(Collectors.joining(",")));
@@ -95,7 +98,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 
 	@Override
 	public Optional<Book> find(final long id) throws IOException {
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
@@ -113,7 +116,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 	@Override
 	public List<Book> findAll() throws IOException {
 		final List<Book> retval = new ArrayList<>();
-		try (PushbackReader in = new PushbackReader(new FileReader(filename))) {
+		try (PushbackReader in = new PushbackReader(Files.newBufferedReader(filename))) {
 			while (true) {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
