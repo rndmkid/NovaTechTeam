@@ -34,7 +34,7 @@ public final class EntityManagementMenu {
 	private final LibraryService service;
 	private final Scanner inStream;
 	private final Appendable outStream;
-	private static final Predicate<String> numericPattern = Pattern.compile("-?\\d+")
+	private static final Predicate<String> IS_NUMERIC = Pattern.compile("-?\\d+")
 			.asPredicate();
 
 	public EntityManagementMenu(final Reader in, final Appendable out,
@@ -77,7 +77,7 @@ public final class EntityManagementMenu {
 	private void retrieveBook() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for book to retrieve (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Book book : service.getAllBooks()) {
@@ -117,7 +117,7 @@ public final class EntityManagementMenu {
 	private void retrieveAuthor() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for author to retrieve (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Author author : service.getAllAuthors()) {
@@ -161,7 +161,7 @@ public final class EntityManagementMenu {
 	private void retrievePublisher() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for publisher to retrieve (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Publisher publisher : service.getAllPublishers()) {
@@ -210,7 +210,7 @@ public final class EntityManagementMenu {
 	private void removeBook() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for book to remove (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Book book : service.getAllBooks()) {
@@ -242,7 +242,7 @@ public final class EntityManagementMenu {
 	private void removeAuthor() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for author to remove (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Author author : service.getAllAuthors()) {
@@ -278,7 +278,7 @@ public final class EntityManagementMenu {
 	private void removePublisher() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for publisher to remove (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				for (final Publisher publisher : service.getAllPublishers()) {
@@ -333,7 +333,7 @@ public final class EntityManagementMenu {
 			final String authorString = getInputLine("ID or name of author of book:")
 					.trim();
 			Author author;
-			if (numericPattern.test(authorString)) {
+			if (IS_NUMERIC.test(authorString)) {
 				final Optional<Author> temp = service
 						.getAuthorByID(Long.parseLong(authorString));
 				if (temp.isPresent()) {
@@ -353,7 +353,7 @@ public final class EntityManagementMenu {
 			final String publisherString = getInputLine(
 					"ID or name of publisher of book (-1 to add new):").trim();
 			Publisher publisher;
-			if (numericPattern.test(publisherString)) {
+			if (IS_NUMERIC.test(publisherString)) {
 				final Optional<Publisher> temp = service
 						.getPublisherByID(Long.parseLong(publisherString));
 				if (temp.isPresent()) {
@@ -442,7 +442,7 @@ public final class EntityManagementMenu {
 	private void updateBook() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for book to update (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				final List<Book> books = service.getAllBooks();
@@ -487,7 +487,7 @@ public final class EntityManagementMenu {
 	private void updateAuthor() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for author to update (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				final List<Author> authors = service.getAllAuthors();
@@ -541,7 +541,7 @@ public final class EntityManagementMenu {
 	private void updatePublisher() throws IOException {
 		final String input = getInputLine(
 				"ID of or search term for publisher to remove (-1 for all):").trim();
-		if (numericPattern.test(input)) {
+		if (IS_NUMERIC.test(input)) {
 			final int id = Integer.parseInt(input);
 			if (id < 0) {
 				final List<Publisher> publishers = service.getAllPublishers();
