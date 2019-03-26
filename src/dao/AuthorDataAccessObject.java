@@ -1,9 +1,11 @@
 package dao;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.PushbackReader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -109,6 +111,8 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 							record.get(1)));
 				}
 			}
+		} catch (FileNotFoundException|NoSuchFileException except) {
+			return new ArrayList<>();
 		}
 	}
 
