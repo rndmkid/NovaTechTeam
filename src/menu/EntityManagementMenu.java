@@ -328,15 +328,6 @@ public final class EntityManagementMenu {
 		}
 	}
 
-	private Author createAuthor() throws IOException {
-		return service.createAuthor(getInputLine("Name of new author:"));
-	}
-
-	private Publisher createPublisher() throws IOException {
-		return service.createPublisher(getInputLine("Name of new publisher:"),
-				getInputLine("Publisher address:"), getInputLine("Publisher phone:"));
-	}
-
 	private void addBook() throws IOException {
 		try {
 			final String authorString = getInputLine("ID or name of author of book")
@@ -388,11 +379,12 @@ public final class EntityManagementMenu {
 	}
 
 	private void addAuthor() throws IOException {
-		createAuthor();
+		service.createAuthor(getInputLine("Name of new author:"));
 	}
 
 	private void addPublisher() throws IOException {
-		createPublisher();
+		service.createPublisher(getInputLine("Name of new publisher:"),
+				getInputLine("Publisher address:"), getInputLine("Publisher phone:"));
 	}
 
 	public void add() throws IOException {
