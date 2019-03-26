@@ -65,7 +65,7 @@ public final class CSVHelper {
 				retval.add(buffer.toString());
 				return retval;
 			} else {
-				buffer.append(ch);
+				buffer.append((char) ch);
 			}
 		}
 	}
