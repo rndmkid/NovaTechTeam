@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * TODO: Once we have a build system in place that does dependency management, switch to a library
  * @author Jonathan Lovelace
  */
-public abstract class CSVHelper {
+public final class CSVHelper {
 	private static final Logger LOGGER = Logger.getLogger(CSVHelper.class.getName());
 	private CSVHelper() {
 		// Do not instantiate
