@@ -39,7 +39,8 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 	@Override
 	public void save(final Book entity) throws IOException {
 		try (PrintWriter out = new PrintWriter(
-				Files.newBufferedWriter(filename, StandardOpenOption.APPEND))) {
+				Files.newBufferedWriter(filename, StandardOpenOption.APPEND,
+						StandardOpenOption.CREATE))) {
 			out.println(Stream
 					.of(entity.getId(), entity.getAuthor().getId(),
 							entity.getPublisher().getId(), entity.getTitle(),

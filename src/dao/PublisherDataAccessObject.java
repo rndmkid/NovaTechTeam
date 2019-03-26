@@ -29,7 +29,8 @@ public final class PublisherDataAccessObject implements DataAccessObject<Publish
 	@Override
 	public void save(final Publisher entity) throws IOException {
 		try (PrintWriter out = new PrintWriter(
-				Files.newBufferedWriter(filename, StandardOpenOption.APPEND))) {
+				Files.newBufferedWriter(filename, StandardOpenOption.APPEND,
+						StandardOpenOption.CREATE))) {
 			out.println(Stream
 					.of(Long.toString(entity.getId()), entity.getName(),
 							entity.getAddress(), entity.getPhone())

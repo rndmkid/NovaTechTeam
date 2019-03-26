@@ -29,7 +29,8 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 	@Override
 	public void save(final Author entity) throws IOException {
 		try (PrintWriter out = new PrintWriter(
-				Files.newBufferedWriter(filename, StandardOpenOption.APPEND))) {
+				Files.newBufferedWriter(filename, StandardOpenOption.APPEND,
+						StandardOpenOption.CREATE))) {
 			out.println(Stream.of(Long.toString(entity.getId()), entity.getName())
 					.map(CSVHelper::quoteCSV).collect(Collectors.joining(",")));
 		}

@@ -2,6 +2,7 @@ package service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public final class LibraryServiceImpl implements LibraryService {
 		try {
 			maxID = authorDAO.findAll().stream().mapToLong(Author::getId).max()
 					.orElse(0L);
-		} catch (final FileNotFoundException except) {
+		} catch (final FileNotFoundException|NoSuchFileException except) {
 			maxID = 0L;
 		}
 		final Author author = new Author(maxID + 1, authorName);
@@ -55,7 +56,7 @@ public final class LibraryServiceImpl implements LibraryService {
 		try {
 			maxID = publisherDAO.findAll().stream().mapToLong(Publisher::getId).max()
 					.orElse(0L);
-		} catch (final FileNotFoundException except) {
+		} catch (final FileNotFoundException|NoSuchFileException except) {
 			maxID = 0L;
 		}
 		final Publisher publisher = new Publisher(maxID + 1, publisherName,
@@ -76,7 +77,7 @@ public final class LibraryServiceImpl implements LibraryService {
 		long maxID;
 		try {
 			maxID = bookDAO.findAll().stream().mapToLong(Book::getId).max().orElse(0L);
-		} catch (final FileNotFoundException except) {
+		} catch (final FileNotFoundException|NoSuchFileException except) {
 			maxID = 0L;
 		}
 		final Book book = new Book(maxID + 1, author, publisher, title, isbn);
