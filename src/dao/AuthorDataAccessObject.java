@@ -67,7 +67,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
 					break;
-				} else if (Long.toString(entity.getId()).contentEquals(record.get(0))) {
+				} else if (Long.toString(entity.getId()).equals(record.get(0))) {
 					table.add(Arrays.asList(Long.toString(entity.getId()),
 							entity.getName()));
 				} else {
