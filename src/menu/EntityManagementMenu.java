@@ -330,7 +330,7 @@ public final class EntityManagementMenu {
 
 	private void addBook() throws IOException {
 		try {
-			final String authorString = getInputLine("ID or name of author of book")
+			final String authorString = getInputLine("ID or name of author of book:")
 					.trim();
 			Author author;
 			if (numericPattern.test(authorString)) {
@@ -388,7 +388,7 @@ public final class EntityManagementMenu {
 	}
 
 	public void add() throws IOException {
-		final String kind = getInputLine("Kind of entity to add").trim().toLowerCase();
+		final String kind = getInputLine("Kind of entity to add:").trim().toLowerCase();
 		switch (kind) {
 		case "book": case "b":
 			addBook();
@@ -573,7 +573,7 @@ public final class EntityManagementMenu {
 	}
 
 	public void update() throws IOException {
-		final String kind = getInputLine("Kind of entity to add").trim().toLowerCase();
+		final String kind = getInputLine("Kind of entity to add:").trim().toLowerCase();
 		switch (kind) {
 		case "book": case "b":
 			updateBook();
