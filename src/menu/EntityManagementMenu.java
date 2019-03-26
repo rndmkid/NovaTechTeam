@@ -639,7 +639,7 @@ public final class EntityManagementMenu {
 					new LibraryServiceImpl(bookDAO, authorDAO, publisherDAO));
 			while (menu.mainMenu()) {}
 		} catch (final IOException except) {
-			System.err.println("I/O error dealing with standard input stream");
+			LOGGER.log(Level.SEVERE, "I/O error dealing with standard input stream", except);
 		}
 	}
 
