@@ -61,7 +61,7 @@ public final class EntityManagementMenu {
 	private void printBook(final Book book, final boolean includeID) throws IOException {
 		outStream.append("Title:\t");
 		println(book.getTitle());
-		outStream.append("Author:\t)");
+		outStream.append("Author:\t");
 		println(book.getAuthor().getName());
 		outStream.append("Publisher:\t");
 		println(book.getPublisher().getName());
