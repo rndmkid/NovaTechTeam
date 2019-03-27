@@ -29,14 +29,37 @@ import service.LibraryServiceImpl;
  *
  */
 public final class EntityManagementMenu {
+	/**
+	 * Logger, used primarily for logging exceptions.
+	 */
 	private static final Logger LOGGER = Logger
 			.getLogger(EntityManagementMenu.class.getName());
+	/**
+	 * The service class used for interacting with the database.
+	 */
 	private final LibraryService service;
+	/**
+	 * How we get input from the user.
+	 */
 	private final Scanner inStream;
+	/**
+	 * How we send output to the user.
+	 */
 	private final Appendable outStream;
+	/**
+	 * A regular-expression testing whether an input is numeric or not.
+	 *
+	 * <p>TODO: Limit length to something less than the length of Long.MAX_VALUE.
+	 */
 	private static final Predicate<String> IS_NUMERIC = Pattern.compile("-?\\d+")
 			.asPredicate();
 
+	/**
+	 * To function, the menu requires input and output streams and the database connection.
+	 * @param in how to get input from the user
+	 * @param out how to send output to the user
+	 * @param service the database connection
+	 */
 	public EntityManagementMenu(final Reader in, final Appendable out,
 			final LibraryService service) {
 		this.service = service;
@@ -188,6 +211,12 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	/**
+	 * Ask the user what kind of record to retrieve, ask for search terms, and show
+	 * the results of the search.
+	 *
+	 * @throws IOException on I/O error of any kind.
+	 */
 	public void retrieve() throws IOException {
 		final String kind = getInputLine("Kind of entity to retrieve:").trim()
 				.toLowerCase();
@@ -309,6 +338,13 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	/**
+	 * Ask the user what kind of entity to remove from the database, and for search
+	 * terms to find the records to remove, then tell the database to remove those
+	 * records.
+	 *
+	 * @throws IOException on I/O error of any kind
+	 */
 	public void remove() throws IOException {
 		final String kind = getInputLine("Kind of entity to remove:").trim()
 				.toLowerCase();
@@ -387,6 +423,12 @@ public final class EntityManagementMenu {
 				getInputLine("Publisher address:"), getInputLine("Publisher phone:"));
 	}
 
+	/**
+	 * Ask the user what kind of record to add, and for details of that record, then
+	 * tell the database to add the record.
+	 *
+	 * @throws IOException on I/O error of any kind.
+	 */
 	public void add() throws IOException {
 		final String kind = getInputLine("Kind of entity to add:").trim().toLowerCase();
 		switch (kind) {
@@ -572,6 +614,13 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	/**
+	 * Ask the user what kind of entity to update, for search terms to find the
+	 * record(s) to update, and for replacement data, then tell the database to make
+	 * the changes.
+	 *
+	 * @throws IOException on I/O error of any kind.
+	 */
 	public void update() throws IOException {
 		final String kind = getInputLine("Kind of entity to update:").trim().toLowerCase();
 		switch (kind) {
@@ -624,6 +673,12 @@ public final class EntityManagementMenu {
 		}
 	}
 
+	/**
+	 * Entry point for the menu UI application.
+	 *
+	 * @param args If non-empty, the first command-line argument is taken to be the
+	 *             directory where the CSV files are stored.
+	 */
 	public static void main(final String... args) {
 		String basePath;
 		if (args.length == 0) {

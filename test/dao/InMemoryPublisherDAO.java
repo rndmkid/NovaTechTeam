@@ -7,8 +7,17 @@ import java.util.Optional;
 
 import model.Publisher;
 
+/**
+ * A data-access-object implementation using a purely in-memory "table" for
+ * use in test code.
+ *
+ * @author Jonathan Lovelace
+ */
 public class InMemoryPublisherDAO implements DataAccessObject<Publisher> {
 
+	/**
+	 * The table of publishers.
+	 */
 	private final List<Publisher> cache = new ArrayList<>();
 
 	@Override

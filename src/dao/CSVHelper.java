@@ -15,11 +15,25 @@ import java.util.logging.Logger;
  * @author Jonathan Lovelace
  */
 public final class CSVHelper {
+	/**
+	 * The logger to use, primarily to log errors.
+	 */
 	private static final Logger LOGGER = Logger.getLogger(CSVHelper.class.getName());
+	/**
+	 * The character used to quote fields in CSV.
+	 */
 	private static final char QUOTE_CHAR = '"';
 	private CSVHelper() {
 		// Do not instantiate
 	}
+
+	/**
+	 * Quote the given string for writing to CSV.
+	 *
+	 * @param string the field to quote
+	 * @return it, with all quote characters doubled, and surrounded by quotes if it
+	 *         contains any quote characters, commas, or newlines.
+	 */
 	public static String quoteCSV(final String string) {
 		if (string == null) {
 			return "";
@@ -32,6 +46,18 @@ public final class CSVHelper {
 			return retval;
 		}
 	}
+
+	/**
+	 * Read a record from a CSV file. We require a {@link PushbackReader} because we
+	 * need to be able to "peek" to distinguish between the close-quote ending a
+	 * field and a doubled quote indicating a quote character inside the field.
+	 *
+	 * <p>TODO: Refactor to reduce cyclomatic complexity.
+	 *
+	 * @param in the stream to read from
+	 * @return the decoded fields in the first record in the stream
+	 * @throws IOException on I/O error
+	 */
 	public static List<String> readCSVRecord(final PushbackReader in) throws IOException {
 		final List<String> retval = new ArrayList<>();
 		final StringBuilder buffer = new StringBuilder();

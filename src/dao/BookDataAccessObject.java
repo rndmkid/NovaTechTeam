@@ -20,14 +20,35 @@ import model.Author;
 import model.Book;
 import model.Publisher;
 
+/**
+ * A class to read Books from and write them to the database (CSV file)
+ * @author Jonathan Lovelace
+ */
 public final class BookDataAccessObject implements DataAccessObject<Book> {
 
+	/**
+	 * The file the table is stored in.
+	 */
 	private final Path filename;
 
+	/**
+	 * The DAO that manages the author table.
+	 */
 	private final DataAccessObject<Author> authorDAO;
 
+	/**
+	 * The DAO that manages the publisher table.
+	 */
 	private final DataAccessObject<Publisher> publisherDAO;
 
+	/**
+	 * Constructing the DAO for the book table requires the filename to look in and
+	 * references to the author and publisher table DAOs.
+	 *
+	 * @param filename the name of the file the book table is stored in
+	 * @param authorDAO the author-table DAO
+	 * @param publisherDAO the publisher-table DAO
+	 */
 	public BookDataAccessObject(final String filename,
 			final DataAccessObject<Author> authorDAO,
 			final DataAccessObject<Publisher> publisherDAO) {
@@ -36,8 +57,14 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 		this.publisherDAO = publisherDAO;
 	}
 
-	// TODO: keep a cache of IDs that have been used, to make save() idempotent on
-	// repeated calls
+	/**
+	 * Store a book in the database.
+	 *
+	 * <p>TODO: keep a cache of IDs that have been used, to make this idempotent on
+	 * repeated calls
+	 *
+	 * @param entity the book to save
+	 */
 	@Override
 	public void save(final Book entity) throws IOException {
 		try (PrintWriter out = new PrintWriter(
