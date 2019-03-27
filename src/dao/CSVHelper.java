@@ -8,7 +8,10 @@ import java.util.logging.Logger;
 
 /**
  * A class containing helper code for working with CSV files.
- * TODO: Once we have a build system in place that does dependency management, switch to a library
+ *
+ * <p>TODO: Once we have a build system in place that does dependency management,
+ * switch to a library
+ *
  * @author Jonathan Lovelace
  */
 public final class CSVHelper {
