@@ -60,7 +60,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
 					break;
-				} else if (!Long.toString(entity.getId()).contentEquals(record.get(0))) {
+				} else if (!Long.toString(entity.getId()).equals(record.get(0))) {
 					table.add(record);
 				}
 			}
@@ -81,7 +81,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
 					break;
-				} else if (Long.toString(entity.getId()).contentEquals(record.get(0))) {
+				} else if (Long.toString(entity.getId()).equals(record.get(0))) {
 					table.add(Arrays.asList(Long.toString(entity.getId()),
 							Long.toString(entity.getAuthor().getId()),
 							Long.toString(entity.getPublisher().getId()),
@@ -106,7 +106,7 @@ public final class BookDataAccessObject implements DataAccessObject<Book> {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
 					return Optional.empty();
-				} else if (Long.toString(id).contentEquals(record.get(0))) {
+				} else if (Long.toString(id).equals(record.get(0))) {
 					return Optional.of(new Book(Long.parseLong(record.get(0)),
 							authorDAO.find(Long.parseLong(record.get(1))).get(),
 							publisherDAO.find(Long.parseLong(record.get(2))).get(),

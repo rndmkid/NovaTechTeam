@@ -57,7 +57,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
 					break;
-				} else if (!Long.toString(entity.getId()).contentEquals(record.get(0))) {
+				} else if (!Long.toString(entity.getId()).equals(record.get(0))) {
 					table.add(record);
 				}
 			}
@@ -101,7 +101,7 @@ public final class AuthorDataAccessObject implements DataAccessObject<Author> {
 				final List<String> record = CSVHelper.readCSVRecord(in);
 				if (record.isEmpty()) {
 					return Optional.empty();
-				} else if (Long.toString(id).contentEquals(record.get(0))) {
+				} else if (Long.toString(id).equals(record.get(0))) {
 					return Optional.of(new Author(Long.parseLong(record.get(0)),
 							record.get(1)));
 				}
