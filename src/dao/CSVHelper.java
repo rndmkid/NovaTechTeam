@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  */
 public final class CSVHelper {
 	private static final Logger LOGGER = Logger.getLogger(CSVHelper.class.getName());
+	private static final char QUOTE_CHAR = '"';
 	private CSVHelper() {
 		// Do not instantiate
 	}
@@ -39,7 +40,7 @@ public final class CSVHelper {
 					retval.add(buffer.toString());
 				}
 				return retval;
-			} else if (ch == '"') {
+			} else if (ch == QUOTE_CHAR) {
 				final int next = in.read();
 				if (next == -1) {
 					if (!inQuotes) {
@@ -47,7 +48,7 @@ public final class CSVHelper {
 					}
 					retval.add(buffer.toString());
 					return retval;
-				} else if (next == '"') {
+				} else if (next == QUOTE_CHAR) {
 					if (!inQuotes) {
 						// TODO: Somehow avoid false-positive warning when properly-quoted
 						// field begins with a quote character
